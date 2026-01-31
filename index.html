@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Telegram App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            text-align: center;
+            background: #f0f2f5;
+            margin: 0;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #0088cc;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 16px;
+            background: #0088cc;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 10px;
+            width: 90%;
+        }
+        button:hover {
+            background: #006699;
+        }
+        .user-info {
+            background: #e8f4ff;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        .counter {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 20px;
+            color: #0088cc;
+        }
+        .btn-small {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            padding: 0;
+            font-size: 20px;
+            margin: 0 10px;
+        }
+        .footer {
+            margin-top: 30px;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 Telegram Mini App</h1>
+        
+        <div class="user-info" id="userInfo">
+            <p><strong>Загрузка данных Telegram...</strong></p>
+            <p>В браузере показывается текст, в Telegram будут ваши данные</p>
+        </div>
+        
+        <div>
+            <h3>🎮 Счетчик:</h3>
+            <div class="counter" id="counter">0</div>
+            <button class="btn-small" onclick="changeCounter(-1)">-</button>
+            <button onclick="changeCounter(1)">+1</button>
+            <button class="btn-small" onclick="changeCounter(5)">+5</button>
+            <button onclick="resetCounter()">Сбросить</button>
+        </div>
+        
+        <div style="margin: 25px 0;">
+            <h3>⚡ Действия:</h3>
+            <button onclick="showAlert()">Показать alert</button>
+            <button onclick="toggleTheme()">Сменить тему</button>
+            <button onclick="vibrate()">Вибрация (в Telegram)</button>
+            <button onclick="closeApp()" style="background: #ff4444;">Закрыть</button>
+        </div>
+        
+        <div class="footer">
+            <p>Открыто в: <span id="platform">Браузере</span></p>
+            <p>ID: <span id="appId">Нет (будет в Telegram)</span></p>
+        </div>
+    </div>
+
+    <script>
+        // Проверяем, в Telegram ли мы
+        let tg = null;
+        let isTelegram = false;
+        
+        if (window.Telegram && window.Telegram.WebApp) {
+            tg = window.Telegram.WebApp;
+            isTelegram = true;
+            document.getElementById('platform').textContent = 'Telegram';
+            
+            // Telegram функции
+            tg.expand(); // На весь экран
+            tg.ready();  // Готово
+            
+            // Показываем данные пользователя
+            const user = tg.initDataUnsafe.user;
+            const userInfo = document.getElementById('userInfo');
+            
+            if (user) {
+                userInfo.innerHTML = `
+                    <p><strong>👤 Имя:</strong> ${user.first_name}</p>
+                    <p><strong>🆔 ID:</strong> ${user.id}</p>
+                    <p><strong>📱 Username:</strong> @${user.username || 'нет'}</p>
+                `;
+            }
+            
+            document.getElementById('appId').textContent = tg.initData || 'есть';
+        }
+        
+        // Счетчик
+        let counter = 0;
+        
+        function changeCounter(value) {
+            counter += value;
+            document.getElementById('counter').textContent = counter;
+        }
+        
+        function resetCounter() {
+            counter = 0;
+            document.getElementById('counter').textContent = counter;
+            alert("Счетчик сброшен!");
+        }
+        
+        function showAlert() {
+            if (isTelegram) {
+                tg.showAlert("Привет из Telegram!");
+            } else {
+                alert("Привет! В Telegram будет красивее");
+            }
+        }
+        
+        function toggleTheme() {
+            if (document.body.style.background === 'black') {
+                document.body.style.background = '#f0f2f5';
+                document.body.style.color = 'black';
+            } else {
+                document.body.style.background = 'black';
+                document.body.style.color = 'white';
+            }
+        }
+        
+        function vibrate() {
+            if (isTelegram && tg.HapticFeedback) {
+                tg.HapticFeedback.impactOccurred('medium');
+                tg.showAlert("📳 Вибрация!");
+            } else {
+                alert("В Telegram на телефоне будет вибрация");
+            }
+        }
+        
+        function closeApp() {
+            if (isTelegram) {
+                if (confirm("Закрыть приложение?")) {
+                    tg.close();
+                }
+            } else {
+                alert("В Telegram эта кнопка закроет приложение");
+            }
+        }
+    </script>
+</body>
+</html>
