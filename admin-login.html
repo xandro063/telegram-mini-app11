@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🔐 Вход в админку</title>
+    <style>
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
+        }
+        
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        .login-logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .login-logo-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #007AFF, #5856D6);
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 36px;
+        }
+        
+        .login-title {
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #1C1C1E;
+        }
+        
+        .login-input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #E5E5EA;
+            border-radius: 12px;
+            font-size: 17px;
+            margin-bottom: 20px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+        
+        .login-input:focus {
+            outline: none;
+            border-color: #007AFF;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #007AFF, #5856D6);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: transform 0.2s;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .login-btn:active {
+            transform: translateY(0);
+        }
+        
+        .error-message {
+            color: #FF3B30;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+            min-height: 20px;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .login-card {
+                background: rgba(28, 28, 30, 0.95);
+            }
+            
+            .login-title {
+                color: white;
+            }
+            
+            .login-input {
+                background: #2C2C2E;
+                border-color: #3A3A3C;
+                color: white;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-logo">
+                <div class="login-logo-icon">
+                    🔐
+                </div>
+            </div>
+            
+            <h1 class="login-title">Инвест Панель</h1>
+            
+            <form id="loginForm">
+                <input type="text" id="username" class="login-input" placeholder="Логин" required>
+                <input type="password" id="password" class="login-input" placeholder="Пароль" required>
+                
+                <button type="submit" class="login-btn" id="loginBtn">
+                    Войти в панель
+                </button>
+                
+                <div id="errorMessage" class="error-message"></div>
+            </form>
+            
+            <div style="margin-top: 30px; text-align: center; font-size: 14px; color: #8E8E93;">
+                <p>По умолчанию: admin / admin123</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            
+            const originalText = loginBtn.innerHTML;
+            
+            loginBtn.innerHTML = '⏳ Проверка...';
+            loginBtn.disabled = true;
+            
+            setTimeout(() => {
+                const storedPassword = localStorage.getItem('adminPassword') || 'admin123';
+                
+                if (username === 'admin' && password === storedPassword) {
+                    localStorage.setItem('adminLoggedIn', 'true');
+                    localStorage.setItem('adminUsername', username);
+                    localStorage.setItem('lastActivity', Date.now().toString());
+                    
+                    loginBtn.innerHTML = '✅ Успешно!';
+                    
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 500);
+                } else {
+                    document.getElementById('errorMessage').textContent = 'Неверный логин или пароль';
+                    loginBtn.innerHTML = originalText;
+                    loginBtn.disabled = false;
+                    
+                    document.getElementById('password').style.borderColor = '#FF3B30';
+                    setTimeout(() => {
+                        document.getElementById('password').style.borderColor = '';
+                    }, 1000);
+                }
+            }, 1000);
+        });
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('username').focus();
+        });
+    </script>
+</body>
+</html>

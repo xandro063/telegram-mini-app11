@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💰 Инвестиции PRO | Telegram</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="page-transition" id="pageTransition"></div>
+    <div class="money-rain" id="moneyRain"></div>
+
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-top">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1>Инвестиции PRO</h1>
+                        <p class="app-version">Premium Edition</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="icon-btn" id="notificationsBtn">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge" id="notificationBadge">3</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="user-card" id="userCard">
+                <div class="user-avatar">
+                    <div class="avatar-glow">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="user-status online">
+                        <i class="fas fa-circle"></i>
+                    </div>
+                </div>
+                <div class="user-info">
+                    <h2 class="user-name">Александр Иванов</h2>
+                    <div class="user-tags">
+                        <span class="user-tag level">Латунный инвестор</span>
+                        <span class="user-tag id">#000001</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content" id="mainContent">
+            <div class="balance-card glass-effect">
+                <div class="balance-header">
+                    <div class="balance-title">
+                        <i class="fas fa-wallet"></i>
+                        <h3>Общий баланс</h3>
+                    </div>
+                    <div class="balance-actions">
+                        <button class="btn-refresh" id="refreshBalance">
+                            <i class="fas fa-redo-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="balance-amount">
+                    <div class="amount-main" id="totalBalance">$ 12,450.75</div>
+                    <div class="amount-change positive">
+                        <i class="fas fa-arrow-trend-up"></i>
+                        <span id="dailyChange">+$245.50 сегодня</span>
+                    </div>
+                </div>
+                
+                <div class="investment-progress">
+                    <div class="progress-info">
+                        <span>Прогресс инвеста</span>
+                        <span class="progress-value" id="investmentProgress">18/25 дней</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 72%">
+                            <div class="progress-glow"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="balance-details-grid">
+                    <div class="balance-detail">
+                        <div class="detail-icon available">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="detail-content">
+                            <span class="detail-label">Доступно</span>
+                            <span class="detail-value" id="availableBalance">$8,245.30</span>
+                        </div>
+                    </div>
+                    <div class="balance-detail">
+                        <div class="detail-icon invested">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <div class="detail-content">
+                            <span class="detail-label">В инвестициях</span>
+                            <span class="detail-value" id="investedBalance">$4,205.45</span>
+                        </div>
+                    </div>
+                    <div class="balance-detail">
+                        <div class="detail-icon income">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div class="detail-content">
+                            <span class="detail-label">Доход в день</span>
+                            <span class="detail-value positive" id="dailyIncome">+$128.75</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <h3 class="section-title">
+                    <i class="fas fa-bolt"></i>
+                    Быстрые действия
+                </h3>
+                <div class="actions-grid">
+                    <button class="action-btn deposit" data-action="show-deposit-modal">
+                        <div class="action-icon">
+                            <i class="fas fa-plus-circle"></i>
+                        </div>
+                        <span>Пополнить</span>
+                    </button>
+                    <button class="action-btn withdraw" data-action="show-withdraw-modal">
+                        <div class="action-icon">
+                            <i class="fas fa-download"></i>
+                        </div>
+                        <span>Вывести</span>
+                    </button>
+                    <button class="action-btn calculator" data-action="calculator">
+                        <div class="action-icon">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <span>Калькулятор</span>
+                    </button>
+                    <button class="action-btn referrals" data-action="referrals">
+                        <div class="action-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <span>Рефералы</span>
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <div class="page" id="calculatorPage" style="display: none;">
+            <div class="page-header">
+                <button class="btn-back" data-action="back">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h2><i class="fas fa-calculator"></i> Калькулятор доходности</h2>
+            </div>
+            <div class="page-content">
+                <div class="calculator-card">
+                    <div class="calculator-header">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Рассчитайте вашу прибыль</h3>
+                        <p class="calculator-subtitle">Процент из админки: <span class="admin-percent" id="adminPercentValue">2.5%</span> в день</p>
+                    </div>
+                    
+                    <div class="calculator-section">
+                        <div class="dynamic-income">
+                            <div class="income-header">
+                                <i class="fas fa-coins"></i>
+                                <h4 id="incomeTitle">Доход в день</h4>
+                            </div>
+                            <div class="income-amount" id="dynamicIncomeAmount">$25.00</div>
+                            <div class="income-details">
+                                <div class="detail-item">
+                                    <span>Инвестировано:</span>
+                                    <span class="detail-value" id="dynamicInvestedAmount">$1,000.00</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span>Общая прибыль:</span>
+                                    <span class="detail-value positive" id="dynamicTotalProfit">$25.00</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span>Итоговая сумма:</span>
+                                    <span class="detail-value success" id="dynamicTotalAmount">$1,025.00</span>
+                                </div>
+                            </div>
+                            <p class="income-note" id="incomeNote">На основе процента из админки: 2.5% в день</p>
+                        </div>
+                    </div>
+                    
+                    <div class="calculator-section">
+                        <label>Сумма инвестиции ($)</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                            <input type="number" id="calcSimpleAmount" value="1000" min="50" step="50">
+                        </div>
+                        <div class="amount-presets">
+                            <button class="amount-preset" data-amount="100">$100</button>
+                            <button class="amount-preset" data-amount="500">$500</button>
+                            <button class="amount-preset" data-amount="1000">$1000</button>
+                            <button class="amount-preset" data-amount="5000">$5000</button>
+                        </div>
+                    </div>
+                    
+                    <div class="calculator-section">
+                        <label>Срок инвестиции</label>
+                        <div class="days-presets">
+                            <button class="day-preset active" data-days="1">
+                                <span class="day-number">1</span>
+                                <span class="day-label">день</span>
+                            </button>
+                            <button class="day-preset" data-days="7">
+                                <span class="day-number">7</span>
+                                <span class="day-label">дней</span>
+                            </button>
+                            <button class="day-preset" data-days="30">
+                                <span class="day-number">30</span>
+                                <span class="day-label">дней</span>
+                            </button>
+                            <button class="day-preset" data-days="90">
+                                <span class="day-number">90</span>
+                                <span class="day-label">дней</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-pay calculator-deposit-btn" data-action="show-info" data-message="Функция пополнения будет доступна в следующем обновлении">
+                        <i class="fas fa-plus-circle"></i>
+                        Пополнить на эту сумму
+                    </button>
+                    
+                    <div class="calculator-info">
+                        <p><i class="fas fa-info-circle"></i> Процентная ставка: 2.5% в день (из админки)</p>
+                        <p><i class="fas fa-clock"></i> Тело инвестиции можно вывести через 25 дней</p>
+                        <p><i class="fas fa-bolt"></i> Расчеты обновляются мгновенно</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page" id="referralsPage" style="display: none;">
+            <div class="page-header">
+                <button class="btn-back" data-action="back">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h2><i class="fas fa-users"></i> Реферальная система</h2>
+            </div>
+            <div class="page-content">
+                <div class="referral-card">
+                    <div class="referral-header">
+                        <i class="fas fa-link"></i>
+                        <h3>Ваша реферальная ссылка</h3>
+                    </div>
+                    <div class="referral-link-container">
+                        <input type="text" id="referralLink" readonly value="Загрузка...">
+                        <button class="btn-copy" data-action="copy-link">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                    <p class="referral-hint">Поделитесь этой ссылкой с друзьями</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon level1">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number" id="level1Count">0</div>
+                            <div class="stat-label">Рефералы 1 ур.</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon level2">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number" id="level2Count">0</div>
+                            <div class="stat-label">Рефералы 2 ур.</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon profit">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number" id="totalReferralProfit">$0</div>
+                            <div class="stat-label">Общий доход</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon today">
+                            <i class="fas fa-calendar-day"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number" id="todayReferralProfit">$0</div>
+                            <div class="stat-label">Доход сегодня</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rules-card">
+                    <h3><i class="fas fa-info-circle"></i> Правила реферальной системы</h3>
+                    <ul class="rules-list">
+                        <li><i class="fas fa-check-circle"></i> За реферала 1 уровня вы получаете <strong id="level1Percent">10%</strong> от его депозита</li>
+                        <li><i class="fas fa-check-circle"></i> За реферала 2 уровня вы получаете <strong id="level2Percent">5%</strong> от его депозита</li>
+                        <li><i class="fas fa-check-circle"></i> Начисления происходят после подтверждения депозита</li>
+                        <li><i class="fas fa-check-circle"></i> Бонусы начисляются только за активных рефералов</li>
+                        <li><i class="fas fa-check-circle"></i> Вывод реферального дохода доступен мгновенно</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="page" id="careerPage" style="display: none;">
+            <div class="page-header">
+                <button class="btn-back" data-action="back">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h2><i class="fas fa-medal"></i> Карьера инвестора</h2>
+            </div>
+            <div class="page-content">
+                <!-- Аккордеон для разделов -->
+                <div class="career-accordion" id="careerAccordion">
+                    <!-- Раздел 1: Карьера (открыт по умолчанию) -->
+                    <div class="accordion-item active">
+                        <div class="accordion-header">
+                            <div class="accordion-title">
+                                <i class="fas fa-trophy"></i>
+                                <h3>Карьера</h3>
+                            </div>
+                            <div class="accordion-icon">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        <div class="accordion-content">
+                            <!-- Лестница успеха -->
+                            <div class="career-ladder">
+                                <div class="ladder-title">
+                                    <i class="fas fa-stairs"></i>
+                                    <h4>Лестница успеха</h4>
+                                </div>
+                                
+                                <div class="ladder-levels">
+                                    <!-- Уровень 5: Золотой -->
+                                    <div class="ladder-level" data-level="gold">
+                                        <div class="level-header">
+                                            <div class="level-badge gold">
+                                                <i class="fas fa-crown"></i>
+                                            </div>
+                                            <div class="level-info">
+                                                <div class="level-name">Золотой</div>
+                                                <div class="level-requirement">$10,000+ депозитов рефералов</div>
+                                            </div>
+                                        </div>
+                                        <div class="level-reward">
+                                            <i class="fas fa-gift"></i>
+                                            <span>Бонус: $500</span>
+                                        </div>
+                                        <div class="level-indicator">
+                                            <div class="indicator-line"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Уровень 4: Серебряный -->
+                                    <div class="ladder-level" data-level="silver">
+                                        <div class="level-header">
+                                            <div class="level-badge silver">
+                                                <i class="fas fa-medal"></i>
+                                            </div>
+                                            <div class="level-info">
+                                                <div class="level-name">Серебряный</div>
+                                                <div class="level-requirement">$5,000+ депозитов рефералов</div>
+                                            </div>
+                                        </div>
+                                        <div class="level-reward">
+                                            <i class="fas fa-gift"></i>
+                                            <span>Бонус: $250</span>
+                                        </div>
+                                        <div class="level-indicator">
+                                            <div class="indicator-line"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Уровень 3: Бронзовый (следующий) -->
+                                    <div class="ladder-level active" data-level="bronze">
+                                        <div class="level-header">
+                                            <div class="level-badge bronze">
+                                                <i class="fas fa-award"></i>
+                                            </div>
+                                            <div class="level-info">
+                                                <div class="level-name">Бронзовый</div>
+                                                <div class="level-requirement">$3,000 депозитов рефералов</div>
+                                            </div>
+                                        </div>
+                                        <div class="level-reward available">
+                                            <i class="fas fa-unlock"></i>
+                                            <span>Доступно: $100</span>
+                                            <button class="reward-claim-btn" data-action="claim-bonus" data-level="Бронзовый">
+                                                <i class="fas fa-gift"></i> Получить
+                                            </button>
+                                        </div>
+                                        <div class="level-progress">
+                                            <div class="progress-text">
+                                                <span>Прогресс: $1,500 / $3,000</span>
+                                                <span class="progress-percent">50%</span>
+                                            </div>
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" style="width: 50%"></div>
+                                            </div>
+                                        </div>
+                                        <div class="level-indicator current">
+                                            <div class="indicator-dot"></div>
+                                            <div class="indicator-label">Вы здесь</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Уровень 2: Латунный (текущий) -->
+                                    <div class="ladder-level achieved" data-level="brass">
+                                        <div class="level-header">
+                                            <div class="level-badge brass">
+                                                <i class="fas fa-star"></i>
+                                            </div>
+                                            <div class="level-info">
+                                                <div class="level-name">Латунный</div>
+                                                <div class="level-requirement">$1,000 депозитов рефералов</div>
+                                            </div>
+                                        </div>
+                                        <div class="level-reward earned">
+                                            <i class="fas fa-check-circle"></i>
+                                            <span>Получено: $50</span>
+                                        </div>
+                                        <div class="level-indicator">
+                                            <div class="indicator-line"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Уровень 1: Новичок -->
+                                    <div class="ladder-level achieved" data-level="novice">
+                                        <div class="level-header">
+                                            <div class="level-badge novice">
+                                                <i class="fas fa-seedling"></i>
+                                            </div>
+                                            <div class="level-info">
+                                                <div class="level-name">Новичок</div>
+                                                <div class="level-requirement">$0+ депозитов рефералов</div>
+                                            </div>
+                                        </div>
+                                        <div class="level-reward">
+                                            <i class="fas fa-flag"></i>
+                                            <span>Стартовый уровень</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Текущая информация -->
+                            <div class="career-current-info">
+                                <div class="current-level-card">
+                                    <div class="level-icon">
+                                        <i class="fas fa-user-tie"></i>
+                                    </div>
+                                    <div class="level-details">
+                                        <div class="level-title">Текущий уровень</div>
+                                        <div class="level-name">Латунный инвестор</div>
+                                        <div class="level-description">Сумма депозитов рефералов: $1,500</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="next-level-card">
+                                    <div class="level-icon">
+                                        <i class="fas fa-arrow-up"></i>
+                                    </div>
+                                    <div class="level-details">
+                                        <div class="level-title">До следующего уровня</div>
+                                        <div class="level-amount">$1,500</div>
+                                        <div class="level-description">Нужно привлечь ещё 3-4 активных реферала</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Раздел 2: Статистика заработка -->
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <div class="accordion-title">
+                                <i class="fas fa-chart-line"></i>
+                                <h3>Статистика заработка</h3>
+                            </div>
+                            <div class="accordion-icon">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </div>
+                        <div class="accordion-content">
+                            <!-- Статистика заработка -->
+                            <div class="earnings-stats">
+                                <div class="earnings-header">
+                                    <i class="fas fa-coins"></i>
+                                    <h4>Общий заработок</h4>
+                                </div>
+                                
+                                <div class="earnings-grid">
+                                    <!-- Инвестиционная прибыль -->
+                                    <div class="earning-stat-card">
+                                        <div class="stat-icon investment">
+                                            <i class="fas fa-chart-pie"></i>
+                                        </div>
+                                        <div class="stat-content">
+                                            <div class="stat-amount" id="totalInvestmentProfit">$2,318.85</div>
+                                            <div class="stat-label">Прибыль от инвестиций</div>
+                                            <div class="stat-details">
+                                                <span>Ежедневно: <strong>$128.75</strong></span>
+                                                <span>За всё время</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Реферальный доход -->
+                                    <div class="earning-stat-card">
+                                        <div class="stat-icon referral">
+                                            <i class="fas fa-users"></i>
+                                        </div>
+                                        <div class="stat-content">
+                                            <div class="stat-amount" id="totalReferralEarnings">$190.00</div>
+                                            <div class="stat-label">Доход от рефералов</div>
+                                            <div class="stat-details">
+                                                <span>Сегодня: <strong>$15.50</strong></span>
+                                                <span>Всего рефералов: 5</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Бонусы карьеры -->
+                                    <div class="earning-stat-card">
+                                        <div class="stat-icon career">
+                                            <i class="fas fa-trophy"></i>
+                                        </div>
+                                        <div class="stat-content">
+                                            <div class="stat-amount" id="totalCareerBonuses">$50.00</div>
+                                            <div class="stat-label">Бонусы карьеры</div>
+                                            <div class="stat-details">
+                                                <span>Получено: <strong>1 бонус</strong></span>
+                                                <span>Доступно: 1 бонус</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Итоговый доход -->
+                                    <div class="earning-stat-total">
+                                        <div class="total-label">Общий доход за всё время</div>
+                                        <div class="total-amount" id="totalAllEarnings">$2,558.85</div>
+                                        <div class="total-breakdown">
+                                            <div class="breakdown-item">
+                                                <span class="label">Инвестиции:</span>
+                                                <span class="value">$2,318.85</span>
+                                            </div>
+                                            <div class="breakdown-item">
+                                                <span class="label">Рефералы:</span>
+                                                <span class="value">$190.00</span>
+                                            </div>
+                                            <div class="breakdown-item">
+                                                <span class="label">Карьера:</span>
+                                                <span class="value">$50.00</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- График доходов -->
+                                <div class="earnings-chart">
+                                    <div class="chart-header">
+                                        <h5><i class="fas fa-chart-bar"></i> Распределение доходов</h5>
+                                        <div class="chart-period">За всё время</div>
+                                    </div>
+                                    <div class="chart-visual">
+                                        <div class="chart-bar investment" style="width: 90%">
+                                            <div class="bar-label">Инвестиции</div>
+                                            <div class="bar-percent">90%</div>
+                                        </div>
+                                        <div class="chart-bar referral" style="width: 7%">
+                                            <div class="bar-label">Рефералы</div>
+                                            <div class="bar-percent">7%</div>
+                                        </div>
+                                        <div class="chart-bar career" style="width: 3%">
+                                            <div class="bar-label">Карьера</div>
+                                            <div class="bar-percent">3%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Кнопка выхода с проекта -->
+                <div class="exit-project-section">
+                    <button class="exit-project-btn" data-action="show-exit-modal">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Выйти с проекта
+                    </button>
+                    <p class="exit-project-note">
+                        <i class="fas fa-info-circle"></i>
+                        При выходе будут сняты ВСЕ средства (доступные + инвестированные)
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="page" id="historyPage" style="display: none;">
+            <div class="page-header">
+                <button class="btn-back" data-action="back">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h2><i class="fas fa-history"></i> История операций</h2>
+            </div>
+            <div class="page-content">
+                <div class="history-filters">
+                    <button class="filter-btn active" data-filter="all">Все</button>
+                    <button class="filter-btn" data-filter="deposit">Пополнения</button>
+                    <button class="filter-btn" data-filter="withdraw">Выводы</button>
+                    <button class="filter-btn" data-filter="profit">Прибыль</button>
+                    <button class="filter-btn" data-filter="referral">Рефералы</button>
+                </div>
+                <div class="history-list" id="historyList"></div>
+            </div>
+        </div>
+
+        <nav class="bottom-nav">
+            <a href="#home" class="nav-item active" data-action="home">
+                <i class="fas fa-home"></i>
+                <span>Главная</span>
+            </a>
+            <a href="#career" class="nav-item" data-action="career">
+                <i class="fas fa-medal"></i>
+                <span>Карьера</span>
+            </a>
+            <a href="#history" class="nav-item" data-action="history">
+                <i class="fas fa-history"></i>
+                <span>История</span>
+            </a>
+            <a href="#referrals" class="nav-item" data-action="referrals">
+                <i class="fas fa-users"></i>
+                <span>Рефералы</span>
+            </a>
+        </nav>
+    </div>
+
+    <div class="loader" id="appLoader">
+        <div class="loader-content">
+            <div class="loader-spinner">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <p class="loader-text">Загрузка приложения...</p>
+        </div>
+    </div>
+
+    <!-- Модальное окно выхода с проекта -->
+    <div class="modal-overlay" id="exitProjectModal" style="display: none;">
+        <div class="modal-content glass-effect">
+            <div class="modal-header">
+                <h3><i class="fas fa-sign-out-alt"></i> Выход с проекта</h3>
+                <button class="modal-close" data-action="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="exit-warning">
+                    <div class="warning-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="warning-content">
+                        <h4>Внимание! Это необратимое действие</h4>
+                        <p>При выходе с проекта будут сняты ВСЕ ваши средства:</p>
+                    </div>
+                </div>
+                
+                <div class="exit-balances">
+                    <div class="balance-item">
+                        <div class="balance-label">
+                            <i class="fas fa-coins"></i>
+                            <span>Доступный баланс</span>
+                        </div>
+                        <div class="balance-amount" id="exitAvailableBalance">$8,745.30</div>
+                    </div>
+                    
+                    <div class="balance-item">
+                        <div class="balance-label">
+                            <i class="fas fa-chart-pie"></i>
+                            <span>Инвестированные средства</span>
+                        </div>
+                        <div class="balance-amount" id="exitInvestedBalance">$3,705.45</div>
+                    </div>
+                    
+                    <div class="balance-total">
+                        <div class="total-label">Всего к получению:</div>
+                        <div class="total-amount" id="exitTotalBalance">$12,450.75</div>
+                    </div>
+                </div>
+                
+                <div class="exit-conditions">
+                    <h5><i class="fas fa-file-contract"></i> Условия вывода средств:</h5>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i> <strong>Доступный баланс</strong> выводится мгновенно</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Инвестированные средства</strong> выводятся досрочно</li>
+                        <li><i class="fas fa-check-circle"></i> При досрочном выводе инвестиций <strong>комиссия не взимается</strong></li>
+                        <li><i class="fas fa-check-circle"></i> Вы получите прибыль за текущий день инвестиций</li>
+                        <li><i class="fas fa-times-circle"></i> После выхода <strong>реферальная программа отключается</strong></li>
+                        <li><i class="fas fa-times-circle"></i> <strong>Невозможно восстановить</strong> аккаунт после выхода</li>
+                    </ul>
+                </div>
+                
+                <div class="exit-confirmation">
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="exitConfirmation">
+                        <span class="checkmark"></span>
+                        <span class="checkbox-text">Я понимаю, что это необратимое действие и согласен с условиями</span>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" data-action="close-modal">Отмена</button>
+                <button class="btn-danger" id="confirmExitBtn" disabled>
+                    <i class="fas fa-sign-out-alt"></i> Подтвердить выход
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Существующие модальные окна (депозит/вывод) -->
+    <div class="modal-overlay" id="depositModal" style="display: none;">
+        <!-- ... существующий код депозита ... -->
+    </div>
+
+    <div class="modal-overlay" id="withdrawModal" style="display: none;">
+        <!-- ... существующий код вывода ... -->
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
